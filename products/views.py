@@ -5,7 +5,29 @@ from drf_yasg import openapi
 from .models import Product
 from .serializers import ProductSerializer
 
-@swagger_auto_schema(method='get', responses={200: ProductSerializer(many=True)})
+@swagger_auto_schema(
+    method='get',
+    operation_description="ดึงรายการสินค้า มี type ทั้งหมด [Tea Whisk, Matcha Stirring Bowl, genmaicha ,hojicha ,matcha]",
+    responses={
+        200: openapi.Response(
+            description="รายการสินค้า",
+            examples={
+                "application/json": [
+                    {
+                        "id": 1,
+                        "type": "matcha",
+                        "name": "Uji Matcha 100g",
+                        "weight_grams": 100,
+                        "price_thb": "390.00",
+                        "description": "มัจฉะแท้จากเมืองอุจิ แหล่งต้นกำเนิดมัจฉะที่เก่าแก่...",
+                        "in_stock": 50,
+                        "image": None
+                    }
+                ]
+            }
+        )
+    }
+)
 @api_view(['GET'])
 def product_list(request):
     products = Product.objects.all()
@@ -13,7 +35,29 @@ def product_list(request):
     return Response(serializer.data)
 
 
-@swagger_auto_schema(method='get', responses={200: ProductSerializer()})
+@swagger_auto_schema(
+    method='get',
+    operation_description="ดึงรายการสินค้า",
+    responses={
+        200: openapi.Response(
+            description="รายการสินค้า",
+            examples={
+                "application/json": [
+                    {
+                        "id": 1,
+                        "type": "matcha",
+                        "name": "Uji Matcha 100g",
+                        "weight_grams": 100,
+                        "price_thb": "390.00",
+                        "description": "มัจฉะแท้จากเมืองอุจิ แหล่งต้นกำเนิดมัจฉะที่เก่าแก่...",
+                        "in_stock": 50,
+                        "image": None
+                    }
+                ]
+            }
+        )
+    }
+)
 @api_view(['GET'])
 def product_detail(request, pk):
     """
