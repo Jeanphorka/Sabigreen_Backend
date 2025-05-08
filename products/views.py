@@ -70,3 +70,9 @@ def product_detail(request, pk):
 
     serializer = ProductSerializer(product)
     return Response(serializer.data)
+
+@api_view(['GET'])
+def health_check(request):
+    return Response({"message": "Backend is alive"}, status=status.HTTP_200_OK)
+    
+    
