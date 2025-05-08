@@ -13,7 +13,7 @@ class Product(models.Model):
     description = models.TextField()
     tea_type = models.ForeignKey(TeaType, on_delete=models.SET_NULL, null=True, blank=True)
     in_stock = models.PositiveIntegerField(default=0)  # จำนวนสินค้าคงเหลือ
-    image = models.ImageField(upload_to='products/')
+    image = models.ImageField(upload_to='products/' , null=True, blank=True)
 
     def __str__(self):
         return f"{self.name} ({self.weight_grams} g)"
