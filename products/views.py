@@ -8,6 +8,7 @@ from .serializers import ProductSerializer
 
 @swagger_auto_schema(
     method='get',
+    operation_summary="ดึงรายการสินค้า",
     operation_description="ดึงรายการสินค้า มี type ทั้งหมด [Tea Whisk, Matcha Stirring Bowl, genmaicha ,hojicha ,matcha]",
     responses={
         200: openapi.Response(
@@ -39,6 +40,7 @@ def product_list(request):
 @swagger_auto_schema(
     method='get',
     operation_description="ดึงรายการสินค้า",
+    operation_summary="ดึงข้อมูลสินค้ารายตัวตาม ID",
     responses={
         200: openapi.Response(
             description="รายการสินค้า",
@@ -72,6 +74,35 @@ def product_detail(request, pk):
     serializer = ProductSerializer(product)
     return Response(serializer.data)
 
+# API สำหรับเรียกดูสินค้าประเภทชา
+@swagger_auto_schema(
+    method='get',
+    operation_summary="เรียกดูสินค้าประเภทชา",
+    operation_description="แสดงรายการสินค้าทุกชนิดที่เป็นชา เช่น matcha, hojicha, genmaicha",
+    responses={200: ProductSerializer(many=True)},
+)
+@api_view(['GET'])
+def get_tea_products(request):
+    tea_keywords = ['matcha', 'hojicha', 'genmaicha']  # กลุ่มชาเขียว
+    teas = Product.objects.filter(type__name__in=tea_keywords)
+    serializer = ProductSerializer(teas, many=True)
+    return Response(serializer.data)
+
+# API สำหรับเรียกดูสินค้าประเภทอุปกรณ์
+@swagger_auto_schema(
+    method='get',
+    operation_summary="เรียกดูสินค้าประเภทอุปกรณ์ชงชา",
+    operation_description="แสดงรายการสินค้าประเภทอุปกรณ์ เช่น Tea Whisk, Matcha Stirring Bowl",
+    responses={200: ProductSerializer(many=True)},
+)
+@api_view(['GET'])
+def get_tool_products(request):
+    tool_keywords = ['Tea Whisk', 'Matcha Stirring Bowl']  # กลุ่มอุปกรณ์
+    tools = Product.objects.filter(type__name__in=tool_keywords)
+    serializer = ProductSerializer(tools, many=True)
+    return Response(serializer.data)
+
+@swagger_auto_schema(method='get', auto_schema=None)
 @api_view(['GET'])
 def health_check(request):
     return Response({"message": "Backend is alive"}, status=status.HTTP_200_OK)
